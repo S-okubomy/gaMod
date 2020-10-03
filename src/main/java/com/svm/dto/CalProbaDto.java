@@ -7,41 +7,41 @@ package main.java.com.svm.dto;
  */
 public class CalProbaDto extends InitDto {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/** 選択確率 */
-	private double ps;
+    /** 選択確率 */
+    private double ps;
 
-	/** 選択確率の総和 */
-	private double sumPs;
+    /** 選択確率の総和 */
+    private double sumPs;
 
-	/**選択確率の保存用 */
-	private double[] rpsn;
+    /**選択確率の保存用 */
+    private double[] rpsn;
 
-	public void setPs(double ps){
+    public void setPs(double ps){
         this.ps = ps;
     }
 
-	public void setSumPs(double sumPs){
+    public void setSumPs(double sumPs){
         this.sumPs = sumPs;
     }
 
-	public void setRpsn(double[] rpsn){
+    public void setRpsn(double[] rpsn){
         this.rpsn = rpsn;
     }
 
 
-	public double getPs() {
-		return this.ps;
-	}
+    public double getPs() {
+        return this.ps;
+    }
 
-	public double getSumPs() {
-		return this.sumPs;
-	}
+    public double getSumPs() {
+        return this.sumPs;
+    }
 
-	public double[] getRpsn() {
-		return this.rpsn;
-	}
+    public double[] getRpsn() {
+        return this.rpsn;
+    }
 
 
 }

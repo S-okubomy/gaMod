@@ -10,21 +10,21 @@ import main.java.com.svm.dto.InitSettingsDto;
  */
 public class ConvertUnit {
 
-	public InitDto convert1(InitDto initDto, InitSettingsDto initSettingsDto) {
+    public InitDto convert1(InitDto initDto, InitSettingsDto initSettingsDto) {
 
-		double[][] ba1 = new double[initSettingsDto.getIndividualNumber()][initSettingsDto.getMinA().length];
-		ba1 = initDto.getBa1();
+        double[][] ba1 = new double[initSettingsDto.getIndividualNumber()][initSettingsDto.getMinA().length];
+        ba1 = initDto.getBa1();
 
-		double[][] ac1 = new double[initSettingsDto.getIndividualNumber()][initSettingsDto.getMinA().length];
-		ac1 = initDto.getAc1();
+        double[][] ac1 = new double[initSettingsDto.getIndividualNumber()][initSettingsDto.getMinA().length];
+        ac1 = initDto.getAc1();
 
-		for (int i = 0; i < initSettingsDto.getIndividualNumber(); i++) {
-			for(int j = 0; j < initSettingsDto.getMinA().length; j++) {
-				ac1[i][j]=ba1[i][j];
-			}
-		}
+        for (int i = 0; i < initSettingsDto.getIndividualNumber(); i++) {
+            for(int j = 0; j < initSettingsDto.getMinA().length; j++) {
+                ac1[i][j]=ba1[i][j];
+            }
+        }
 
-		initDto.setAc1(ac1);
-		return initDto;
-	}
+        initDto.setAc1(ac1);
+        return initDto;
+    }
 }

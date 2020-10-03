@@ -11,9 +11,9 @@ import main.java.com.svm.dto.InitSettingsDto;
  */
 public class ProbaSelectUnit {
 
-	//ランダムーサーチをして，ある程度制約を満たした解を
-	//初期個体とする．
-	public CalProbaDto probaSelecct(CalFitDto calFitDto, InitSettingsDto initSettingsDto){
+    //ランダムーサーチをして，ある程度制約を満たした解を
+    //初期個体とする．
+    public CalProbaDto probaSelecct(CalFitDto calFitDto, InitSettingsDto initSettingsDto){
 
         /** 選択確率 */
         double ps;
@@ -32,14 +32,14 @@ public class ProbaSelectUnit {
         sumPs=0;
         rpsn[0]=0;
         for(int i=0; i< initSettingsDto.getIndividualNumber(); i++){
-        	ps=(fit1[i] /sumFit)*100d;    /*選択確率の計算*/
-        	sumPs=sumPs+ps;      /*総和を計算*/
-        	rpsn[i+1]=sumPs;    /*記憶*/
+            ps=(fit1[i] /sumFit)*100d;    /*選択確率の計算*/
+            sumPs=sumPs+ps;      /*総和を計算*/
+            rpsn[i+1]=sumPs;    /*記憶*/
         }
         
         CalProbaDto calProbaDto = new CalProbaDto();
         calProbaDto.setRpsn(rpsn);
         
         return calProbaDto;
-	}
+    }
 }
