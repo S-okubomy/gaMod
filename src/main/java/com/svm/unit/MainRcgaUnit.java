@@ -13,6 +13,7 @@ import main.java.com.svm.dto.ResultGeneDto;
 
 /**
  * RCGAのメインクラス
+ * 
  * @author Administrator
  *
  */
@@ -20,102 +21,101 @@ public class MainRcgaUnit {
 
     public ResultGeneDto calGene(String evaluationClsName, String modeName) {
 
-         // 最適化の結果返却用
+        // 最適化の結果返却用
         ResultGeneDto resultGeneDto = new ResultGeneDto();
-        
-        try{
+
+        try {
             InitSettingsDto initSettingsDto = new InitSettingsDto(evaluationClsName);
 
             // Projectのトップディレクトリパス取得
             String folderName = System.getProperty("user.dir");
-              // トップディレクトリパス以降を設定
+            // トップディレクトリパス以降を設定
             folderName = folderName + "/src/main/resources/outputFile/";
-            String fname1 ="getStudyManModelTestHistLog";
-            String fnameUse ="getStudyManModelTestHist";
+            String fname1 = "getStudyManModelTestHistLog";
+            String fnameUse = "getStudyManModelTestHist";
 
-              //データ保存用 変数
+            // データ保存用 変数
             int writeL = 0;
             int writeFitMaxNum = 0;
             double writeFitMax = 0;
 
-              //出力用ファイルのオープン
-            FileOutputStream fos = new FileOutputStream( folderName + fname1 + ".csv");
-            OutputStreamWriter osw = new OutputStreamWriter(fos , "UTF-8");
+            // 出力用ファイルのオープン
+            FileOutputStream fos = new FileOutputStream(folderName + fname1 + ".csv");
+            OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
             BufferedWriter bw = new BufferedWriter(osw);
 
-              //フォーマット
+            // フォーマット
             DecimalFormat df1 = new DecimalFormat("0.00");
             DecimalFormat df2 = new DecimalFormat("0.000");
 
-              /* 初期遺伝子をつくる */
+            /* 初期遺伝子をつくる */
             InitGaUnit initGa = new InitGaUnit();
             InitDto initDto = new InitDto();
 
-              /* 適応度を計算する */
+            /* 適応度を計算する */
             CalFitDto calFitDto = new CalFitDto();
             CalFitUnit calFit = new CalFitUnit();
 
-              /* 選択確率を計算する */
+            /* 選択確率を計算する */
             CalProbaDto calProbaDto = new CalProbaDto();
             ProbaSelectUnit probaSelecct = new ProbaSelectUnit();
 
-              /* ルーレット選択を行う */
+            /* ルーレット選択を行う */
             RouletteSelectUnit selectR = new RouletteSelectUnit();
 
-              /* ブレンド交叉（BLX)をする */
+            /* ブレンド交叉（BLX)をする */
             CrossBLXUnit crossBLX = new CrossBLXUnit();
 
-              /* 突然変異（一様突然変異）をする */
+            /* 突然変異（一様突然変異）をする */
             MutationUnit mutation = new MutationUnit();
 
-              /*染色体の遺伝子の値を関数の係数にする*/
+            /* 染色体の遺伝子の値を関数の係数にする */
             ConvertUnit convert1 = new ConvertUnit();
-            
+
             String strPr = "個体No: " + " 適応度 ";
             for (int i = 0; i < initSettingsDto.getMinA().length; i++) {
                 strPr = strPr + " 係数" + Integer.valueOf(i).toString() + " ";
-              }
+            }
             System.out.println(strPr);
-            
-            
+
             String strWrite = "世代," + "個体No," + "実値," + "適応度,";
             for (int i = 0; i < initSettingsDto.getMinA().length - 1; i++) {
                 strWrite = strWrite + " 係数" + Integer.valueOf(i).toString() + ",";
-              }
+            }
             strWrite = strWrite + " 係数" + Integer.valueOf(initSettingsDto.getMinA().length - 1).toString() + "\r\n";
             bw.write(strWrite);
 
-              /* 初期遺伝子をつくる */
+            /* 初期遺伝子をつくる */
             initGa.initGa(evaluationClsName, initDto, initSettingsDto);
 
-              /* 適応度を計算する */
+            /* 適応度を計算する */
             calFitDto = calFit.calFit(initDto, initSettingsDto, evaluationClsName, modeName);
 
-              /* 全世代 最大の個体を取得*/
+            /* 全世代 最大の個体を取得 */
             double[] acGenMax1 = new double[initSettingsDto.getMinA().length];
             double fitGenMax1 = -100000d;
             double truvalGenMax1 = 0;
             int LGenMax1 = 0;
             int fitMaxNumGen1 = 0;
 
-            for(int L = 0; L < initSettingsDto.getCalSedai() ; L++){
+            for (int L = 0; L < initSettingsDto.getCalSedai(); L++) {
 
-                  /* 選択確率を計算する */
+                /* 選択確率を計算する */
                 calProbaDto = probaSelecct.probaSelecct(calFitDto, initSettingsDto);
 
-                  /* ルーレット選択を行う */
-                initDto = selectR.selectR(calProbaDto,calFitDto, initSettingsDto);
+                /* ルーレット選択を行う */
+                initDto = selectR.selectR(calProbaDto, calFitDto, initSettingsDto);
 
-                   /* ブレンド交叉（BLX)をする */
+                /* ブレンド交叉（BLX)をする */
                 initDto = crossBLX.crossBLX(initDto, initSettingsDto);
 
-                   /* 突然変異（一様突然変異）をする */
+                /* 突然変異（一様突然変異）をする */
                 initDto = mutation.mutation(initDto, initSettingsDto);
 
-                  /*染色体の遺伝子の値を関数の係数にする*/
+                /* 染色体の遺伝子の値を関数の係数にする */
                 initDto = convert1.convert1(initDto, initSettingsDto);
 
-                  /* 適応度を計算する */
+                /* 適応度を計算する */
                 calFitDto = calFit.calFit(initDto, initSettingsDto, evaluationClsName, modeName);
 
                 double[] trueVal = new double[initSettingsDto.getIndividualNumber()];
@@ -131,84 +131,88 @@ public class MainRcgaUnit {
                 System.out.println("世代： " + L);
                 double fitMax = fit1[0];
                 int fitMaxNum = 0;
-                for(int i =1; i < fit1.length ; i++) {
+                for (int i = 1; i < fit1.length; i++) {
                     if (fit1[i] > fitMax) {
                         fitMax = fit1[i];
                         fitMaxNum = i;
-                       }
-                  }
-                
-                String strPrMax = "個体No: " + fitMaxNum + " ,実値: " + df2.format(trueVal[fitMaxNum])  + " ,適応度： " + df2.format(fit1[fitMaxNum]) + "  ";
+                    }
+                }
+
+                String strPrMax = "個体No: " + fitMaxNum + " ,実値: " + df2.format(trueVal[fitMaxNum]) + " ,適応度： "
+                        + df2.format(fit1[fitMaxNum]) + "  ";
                 for (int i = 0; i < initSettingsDto.getMinA().length; i++) {
                     strPrMax = strPrMax + df1.format(ac1[fitMaxNum][i]) + "  ";
-                  }
+                }
                 System.out.println(strPrMax);
-                
-                //CSVに書き込み
-                String strWriteMax = L + "," + fitMaxNum + "," + df2.format(trueVal[fitMaxNum]) + "," + df2.format(fit1[fitMaxNum]) + ",";
+
+                // CSVに書き込み
+                String strWriteMax = L + "," + fitMaxNum + "," + df2.format(trueVal[fitMaxNum]) + ","
+                        + df2.format(fit1[fitMaxNum]) + ",";
                 for (int i = 0; i < initSettingsDto.getMinA().length - 1; i++) {
                     strWriteMax = strWriteMax + df1.format(ac1[fitMaxNum][i]) + ",";
-                  }
+                }
                 strWriteMax = strWriteMax + df1.format(ac1[fitMaxNum][initSettingsDto.getMinA().length - 1]) + "\r\n";
                 bw.write(strWriteMax);
 
-                  //全世代で適応度が最大のものを保存
+                // 全世代で適応度が最大のものを保存
                 if (fit1[fitMaxNum] > fitGenMax1) {
                     fitGenMax1 = fit1[fitMaxNum];
                     fitMaxNumGen1 = fitMaxNum;
                     LGenMax1 = L;
                     truvalGenMax1 = trueVal[fitMaxNum];
-                    for(int i =0; i < initSettingsDto.getMinA().length ; i++) {
+                    for (int i = 0; i < initSettingsDto.getMinA().length; i++) {
                         acGenMax1[i] = ac1[fitMaxNum][i];
-                       }
-                  }
+                    }
+                }
 
-              }
-              //ファイルクローズ
+            }
+            // ファイルクローズ
             bw.close();
 
             writeL = LGenMax1;
             writeFitMaxNum = fitMaxNumGen1;
             writeFitMax = fitGenMax1;
-            String strPrMaxAll = "最大世代: " + writeL +  " ,個体No: " + writeFitMaxNum + " ,実値: " + df2.format(truvalGenMax1)  + " ,適応度： " + df2.format(writeFitMax) + "  ";
+            String strPrMaxAll = "最大世代: " + writeL + " ,個体No: " + writeFitMaxNum + " ,実値: " + df2.format(truvalGenMax1)
+                    + " ,適応度： " + df2.format(writeFitMax) + "  ";
             for (int i = 0; i < initSettingsDto.getMinA().length; i++) {
                 strPrMaxAll = strPrMaxAll + df1.format(acGenMax1[i]) + "  ";
-              }
+            }
             System.out.println(strPrMaxAll);
-            
-              //最終結果をCSVへ書き込み
-            FileOutputStream fosUse = new FileOutputStream( folderName + fnameUse + ".csv");
-            OutputStreamWriter oswUse = new OutputStreamWriter(fosUse , "UTF-8");
+
+            // 最終結果をCSVへ書き込み
+            FileOutputStream fosUse = new FileOutputStream(folderName + fnameUse + ".csv");
+            OutputStreamWriter oswUse = new OutputStreamWriter(fosUse, "UTF-8");
             BufferedWriter bwUse = new BufferedWriter(oswUse);
-            
-              // タイトルの書き込み
+
+            // タイトルの書き込み
             String strWriteMaxFinalTitle = "世代," + "個体No," + "適応度,";
             for (int i = 0; i < initSettingsDto.getMinA().length - 1; i++) {
                 strWriteMaxFinalTitle = strWriteMaxFinalTitle + " 係数" + Integer.valueOf(i).toString() + ",";
-              }
-            strWriteMaxFinalTitle = strWriteMaxFinalTitle + " 係数" + Integer.valueOf(initSettingsDto.getMinA().length - 1).toString() + "\r\n";
+            }
+            strWriteMaxFinalTitle = strWriteMaxFinalTitle + " 係数"
+                    + Integer.valueOf(initSettingsDto.getMinA().length - 1).toString() + "\r\n";
             bwUse.write(strWriteMaxFinalTitle);
-            
-              // 値の書き込み
+
+            // 値の書き込み
             String strWriteMaxFinal = writeL + "," + writeFitMaxNum + "," + df2.format(writeFitMax) + ",";
             for (int i = 0; i < initSettingsDto.getMinA().length - 1; i++) {
                 strWriteMaxFinal = strWriteMaxFinal + df1.format(acGenMax1[i]) + ",";
-              }
+            }
             strWriteMaxFinal = strWriteMaxFinal + df1.format(acGenMax1[initSettingsDto.getMinA().length - 1]) + "\r\n";
             bwUse.write(strWriteMaxFinal);
 
-              //ファイルクローズ
+            // ファイルクローズ
             bwUse.close();
-            
-              // 最適化後の結果をセットする
+
+            // 最適化後の結果をセットする
             resultGeneDto.setFit1(fitMaxNumGen1);
             resultGeneDto.setTrueVal1(truvalGenMax1);
             resultGeneDto.setAc1(acGenMax1);
-            
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
-         }
-        
+        }
+
         return resultGeneDto;
     }
 }
